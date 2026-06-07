@@ -59,5 +59,5 @@ artifacts:
     paths: ["*/**"]
 availableSecrets:
   secretManager:
-    - versionName: projects/724455289756/secrets/cloudbuild-snyk-token/versions/2
+    - versionName: projects/140304896915/secrets/cloudbuild-snyk-token/versions/1
       env: "SNYK_TOKEN"
