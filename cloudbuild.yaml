@@ -33,7 +33,7 @@ steps:
         snyk test || true
         snyk code test || true
 
-  # Step 6: Deploy to Cloud Run
+# Step 6: Deploy to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: "bash"
     args:
@@ -43,13 +43,6 @@ steps:
         --image gcr.io/$PROJECT_ID/my-app:latest \
         --region us-central1 \
         --platform managed
-
-        gcloud run services add-iam-policy-binding \
-        gcp-python-fastapi-service \
-        --platform=managed \
-        --region=us-central1 \
-        --member="allUsers" \
-        --role="roles/run.invoker" \
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
