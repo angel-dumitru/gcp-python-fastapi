@@ -46,10 +46,7 @@ steps:
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-artifacts:
-  objects:
-    location: "gs://dsb-devsecops-lab-bucket"
-    paths: ["*/**"]
+
 availableSecrets:
   secretManager:
     - versionName: projects/140304896915/secrets/cloudbuild-snyk-token/versions/1
