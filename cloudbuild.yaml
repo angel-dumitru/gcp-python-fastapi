@@ -17,11 +17,17 @@ steps:
         pip install -r requirements.txt
         pytest tests/
 
-  # Step 4: Scan Docker Image with Trivy
+ # Step 4: Scan Docker Image with Trivy & Save Report
   - name: "aquasec/trivy"
-    args: ["image", "--exit-code", "0", "gcr.io/$PROJECT_ID/my-app:latest"]
+    args: [
+      "image", 
+      "--exit-code", "0", 
+      "--format", "json", 
+      "--output", "/workspace/trivy-container-report.json", 
+      "gcr.io/$PROJECT_ID/my-app:latest"
+    ]
 
-  # Step 5: Snyk Code and Dependency Scanning
+  # Step 5: Snyk Code Scanning & Save Report
   - name: "node"
     entrypoint: "bash"
     secretEnv: ["SNYK_TOKEN"]
@@ -30,8 +36,8 @@ steps:
       - |
         npm install -g snyk
         snyk auth $$SNYK_TOKEN
-        snyk test || true
-        snyk code test || true
+        # Scan code and write output directly to a file
+        snyk code test --json-file-output=/workspace/snyk-code-report.json || true
 
 # Step 6: Deploy to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -47,6 +53,13 @@ steps:
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
+artifacts:
+  objects:
+    location: "gs://12309861-21233"
+    paths: 
+      - "/workspace/trivy-container-report.json"
+      - "/workspace/snyk-code-report.json"
+      
 availableSecrets:
   secretManager:
     - versionName: projects/140304896915/secrets/cloudbuild-snyk-token/versions/1
